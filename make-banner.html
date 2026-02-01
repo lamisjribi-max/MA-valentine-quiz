@@ -125,7 +125,7 @@ function drawPixelRoundedPanel(x,y,w,h,opts){
     o.closePath();
   }
 
-  // fillerrrrr
+  // fill
   roundRectPath(0,0,ow,oh,rad);
   o.fillStyle = fill;
   o.fill();
@@ -152,7 +152,7 @@ function drawText(title, subtitle){
   ctx.textAlign = "center";
   ctx.textBaseline = "top";
 
-  //  title and smaller subtitle KILL ME
+  //  title and smaller subtitle 
   ctx.fillStyle = bg.paper;
   ctx.font = "54px 'Press Start 2P', system-ui, sans-serif";
   ctx.fillText((title || "VALENTINE QUIZ").toUpperCase(), 600, panel.y + 54);
