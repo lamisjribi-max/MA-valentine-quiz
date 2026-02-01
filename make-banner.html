@@ -62,7 +62,7 @@ function drawCurtainStripes(){
     ctx.fillRect(i,0,38,630);
   }
 
-  // soft vignette
+  //  vignette
   const g = ctx.createRadialGradient(600,260,80,600,320,760);
   g.addColorStop(0,"rgba(0,0,0,0)");
   g.addColorStop(1,"rgba(0,0,0,0.55)");
@@ -98,7 +98,7 @@ function drawSpotlight(){
 }
 
 function drawHearts(){
-  // Pixel hearts, NO outline border, more scattered
+  // Pixel hearts scattered
   function pxHeart(x,y,scale,color){
     ctx.fillStyle=color;
     const p=6*scale;
