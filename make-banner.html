@@ -27,7 +27,7 @@
         <button id="render">Render</button>
         <button id="download">Download og.png</button>
       </div>
-      <div class="hint">After downloading, upload the image as <b>og.png</b> to your GitHub repo.</div>
+      <div class="hint">Download then upload to your repo as <b>og.png</b>.</div>
     </div>
 
     <canvas id="c" width="1200" height="630"></canvas>
@@ -56,21 +56,21 @@ function drawCurtainStripes(){
   ctx.fillStyle = palette.deep;
   ctx.fillRect(0,0,1200,630);
 
-  // subtle vignette
-  const g = ctx.createRadialGradient(600,280,60,600,320,700);
-  g.addColorStop(0,"rgba(0,0,0,0)");
-  g.addColorStop(1,"rgba(0,0,0,0.55)");
-  ctx.fillStyle = g; ctx.fillRect(0,0,1200,630);
-
   // curtains
   for(let i=0;i<1200;i+=38){
     ctx.fillStyle = (Math.floor(i/38)%2===0) ? "#6e0d1b" : "#5b0b16";
     ctx.fillRect(i,0,38,630);
   }
+
+  // soft vignette
+  const g = ctx.createRadialGradient(600,260,80,600,320,760);
+  g.addColorStop(0,"rgba(0,0,0,0)");
+  g.addColorStop(1,"rgba(0,0,0,0.55)");
+  ctx.fillStyle = g;
+  ctx.fillRect(0,0,1200,630);
 }
 
 function heartMaskPath(cx, cy, size){
-  // simple heart path (not SVG), good enough for OG art
   ctx.beginPath();
   const s=size;
   ctx.moveTo(cx, cy + s*0.35);
@@ -80,26 +80,25 @@ function heartMaskPath(cx, cy, size){
 }
 
 function drawSpotlight(){
-  // dim overlay
-  ctx.fillStyle="rgba(0,0,0,0.25)";
+  ctx.fillStyle="rgba(0,0,0,0.24)";
   ctx.fillRect(0,0,1200,630);
 
-  // heart spotlight
   ctx.save();
   heartMaskPath(600, 240, 260);
   ctx.clip();
 
-  const rg = ctx.createRadialGradient(600,240,30,600,240,330);
-  rg.addColorStop(0,"rgba(244,222,227,0.75)");
+  const rg = ctx.createRadialGradient(600,240,30,600,240,340);
+  rg.addColorStop(0,"rgba(244,222,227,0.78)");
   rg.addColorStop(0.45,"rgba(244,222,227,0.22)");
   rg.addColorStop(1,"rgba(244,222,227,0)");
   ctx.fillStyle = rg;
   ctx.fillRect(0,0,1200,630);
+
   ctx.restore();
 }
 
 function drawHearts(){
-  // pixel hearts scattered
+  // Pixel hearts, NO outline border, more scattered
   function pxHeart(x,y,scale,color){
     ctx.fillStyle=color;
     const p=6*scale;
@@ -110,34 +109,39 @@ function drawHearts(){
       [1,3],[2,3],[3,3],
       [2,4]
     ];
-    for(const [bx,by] of blocks) ctx.fillRect(x+bx*p,y+by*p,p,p);
-    ctx.lineWidth=4; ctx.strokeStyle=palette.ink;
-    ctx.strokeRect(x, y, 5*p, 5*p);
+    for(const [bx,by] of blocks){
+      ctx.fillRect(x+bx*p,y+by*p,p,p);
+    }
   }
-  for(let i=0;i<14;i++){
-    const x = 70 + Math.random()*1060;
-    const y = 70 + Math.random()*480;
-    const s = 1 + Math.floor(Math.random()*2);
-    const col = (i%3===0) ? palette.chineseRed : (i%3===1) ? palette.intimatePink : palette.stalactite;
+
+  for(let i=0;i<42;i++){
+    const x = 30 + Math.random()*1140;
+    const y = 30 + Math.random()*540;
+    const s = 1 + Math.floor(Math.random()*3);
+
+    const r = Math.random();
+    const col =
+      r < 0.28 ? palette.chineseRed :
+      r < 0.78 ? palette.intimatePink :
+                 palette.stalactite;
+
     pxHeart(x,y,s,col);
   }
 }
 
 function drawText(title, subtitle){
-  // retro frame
   drawPixelRect(120, 340, 960, 220, "rgba(26,7,13,0.85)", palette.ink, 10);
   drawPixelRect(150, 370, 900, 160, "rgba(0,0,0,0)", "rgba(242,239,220,0.25)", 6);
 
-  // text (system font fallback)
   ctx.fillStyle = palette.intimatePink;
   ctx.font = "64px 'Press Start 2P', system-ui, sans-serif";
   ctx.textAlign = "center";
   ctx.textBaseline = "top";
-  ctx.fillText(title.toLowerCase(), 600, 392);
+  ctx.fillText((title||"valentine quiz").toLowerCase(), 600, 392);
 
   ctx.fillStyle = palette.papyrus;
   ctx.font = "28px 'Press Start 2P', system-ui, sans-serif";
-  ctx.fillText(subtitle.toLowerCase(), 600, 470);
+  ctx.fillText((subtitle||"").toLowerCase(), 600, 470);
 }
 
 function render(){
@@ -161,7 +165,6 @@ document.getElementById("download").addEventListener("click", () => {
   a.click();
 });
 
-// initial render
 render();
 </script>
 </body>
